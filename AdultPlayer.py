@@ -1,3 +1,8 @@
+"""
+All code on this file was obtain from the following link:
+    https://github.com/tianyu-z/Connect-4-Gym-env-Reinforcement-learning/tree/main
+"""
+
 import numpy as np
 from Player import Player
 
