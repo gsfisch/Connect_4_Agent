@@ -25,6 +25,14 @@ class ConnectFourEnv(gymnasium.Env):
     MIN_INDEX_TO_PLAY = 0
     INVALID_player = 0
     INVALID_opponent = 0
+    games_played = 0
+    agent_wins = 0
+    opponent_wins = 0
+    draw_count = 0
+    truncated_count = 0
+    win_amount = 0
+    lost_amount = 0
+
 
     def change_opponent(self, opponent):
         self._opponent = opponent
@@ -83,6 +91,7 @@ class ConnectFourEnv(gymnasium.Env):
                 return self.board, {"opponent_action": opponent_action} #.item()
             self._render_for_human()
 
+        # ConnectFourEnv.games_played += 1
         return self.board, {"opponent_action": None}
 
     def _render_for_human(self):
@@ -101,15 +110,28 @@ class ConnectFourEnv(gymnasium.Env):
 
     def is_finish(self):
         if self.invalid_move_has_been_played:
-            return self.board[self.last_move_row, self.last_move_col], True
+            ConnectFourEnv.truncated_count += 1
+            ConnectFourEnv.games_played += 1
+            return -1, True
 
         if self.last_move_col is None or self.last_move_row is None:
             return 0, False
 
         if self.check_win_around_last_move(self.last_move_row, self.last_move_col):
+            if self.next_player_to_play == 1:
+                #print('Agent wins', end='\n')
+                ConnectFourEnv.win_amount += 1
+
+            if self.next_player_to_play == -1:
+                #print('Opponent wins', end='\n')
+                ConnectFourEnv.lost_amount += 1
+
+            ConnectFourEnv.games_played += 1
             return self.board[self.last_move_row, self.last_move_col], True
 
         if self.board_is_full():
+            ConnectFourEnv.draw_count += 1
+            ConnectFourEnv.games_played += 1
             return 0, True
 
         return 0, False
