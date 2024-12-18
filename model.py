@@ -37,7 +37,7 @@ model = PPO.load('Connect-4_agent_Curriculum2_only.zip', env=env) # Connect-4_ag
 
 
 # Train model
-model.learn(total_timesteps=2_000_000) #100_000
+model.learn(total_timesteps=500_000) #100_000
 
 
 # Save model
